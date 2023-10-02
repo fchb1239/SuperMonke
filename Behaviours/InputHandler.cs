@@ -1,33 +1,66 @@
-﻿using UnityEngine.XR;
+﻿using System;
 
 namespace SuperMonke.Behaviours
 {
     class InputHandler
     {
-        static XRNode leftHandNode = XRNode.LeftHand;
-        static XRNode rightHandNode = XRNode.RightHand;
+        static ControllerInputPoller cip = ControllerInputPoller.instance;
 
         public static bool GetInput(bool isLeftHand, InputType inputType)
         {
             bool output = false;
-            XRNode node;
 
-            node = isLeftHand ? leftHandNode : rightHandNode;
-
-            //super shitty - i'll make a better 
             switch (inputType)
             {
                 case InputType.triggerButton:
-                    InputDevices.GetDeviceAtXRNode(node).TryGetFeatureValue(CommonUsages.triggerButton, out output);
+                    if (isLeftHand)
+                    {
+                        if (cip.leftControllerIndexFloat > 0)
+                        {
+                            output = true;
+                        }
+                    }
+                    else
+                    {
+                        if (cip.rightControllerIndexFloat > 0)
+                        {
+                            output = true;
+                        }
+                    }
                     break;
                 case InputType.gripButton:
-                    InputDevices.GetDeviceAtXRNode(node).TryGetFeatureValue(CommonUsages.gripButton, out output);
+                    if (isLeftHand)
+                    {
+                        if (cip.leftControllerGripFloat > 0)
+                        {
+                            output = true;
+                        }
+                    }
+                    else
+                    {
+                        if (cip.rightControllerGripFloat > 0)
+                        {
+                            output = true;
+                        }
+                    }
                     break;
                 case InputType.primaryButton:
-                    InputDevices.GetDeviceAtXRNode(node).TryGetFeatureValue(CommonUsages.primaryButton, out output);
+                    if (isLeftHand)
+                    {
+                        if (cip.leftControllerPrimaryButton)
+                        {
+                            output = true;
+                        }
+                    }
+                    else
+                    {
+                        if (cip.rightControllerPrimaryButton)
+                        {
+                            output = true;
+                        }
+                    }
                     break;
                 default:
-                    //this shouldn't happen
                     break;
             }
             return output;

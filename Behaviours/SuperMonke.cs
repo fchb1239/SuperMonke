@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using UnityEngine;
-using UnityEngine.XR;
-
 using GorillaLocomotion;
+using BepInEx;
 
 namespace SuperMonke.Behaviours
 {
     class SuperMonke : MonoBehaviour
     {
-        Player player = Player.Instance;
+        Player player;
         private Rigidbody rb;
         private float speed = 1;
+
 
         private void Awake()
         {
             Console.WriteLine("super monke has awoken!! watch out!! (it's very scary)");
+            player = Player.Instance;
             rb = player.GetComponent<Rigidbody>();
         }
 
@@ -27,8 +27,8 @@ namespace SuperMonke.Behaviours
                 bool isLeft = InputHandler.GetInput(true, InputHandler.InputType.triggerButton) && InputHandler.GetInput(true, InputHandler.InputType.gripButton) && InputHandler.GetInput(true, InputHandler.InputType.primaryButton);
                 bool isRight = InputHandler.GetInput(false, InputHandler.InputType.triggerButton) && InputHandler.GetInput(false, InputHandler.InputType.gripButton) && InputHandler.GetInput(false, InputHandler.InputType.primaryButton);
 
-                Vector3 bodyToLeft = player.leftHandTransform.position - player.bodyCollider.transform.position;
-                Vector3 bodyToRight = player.rightHandTransform.position - player.bodyCollider.transform.position;
+                Vector3 bodyToLeft = GorillaTagger.Instance.leftHandTransform.position - player.bodyCollider.transform.position;
+                Vector3 bodyToRight = GorillaTagger.Instance.rightHandTransform.position - player.bodyCollider.transform.position;
 
                 if (isLeft && isRight)
                 {
